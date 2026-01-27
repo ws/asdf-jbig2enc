@@ -2,10 +2,10 @@
 
 set -euo pipefail
 
-# TODO: Ensure this is the correct GitHub homepage where releases can be downloaded for jbig2enc.
 GH_REPO="https://github.com/agl/jbig2enc"
 TOOL_NAME="jbig2enc"
-TOOL_TEST="jbig2enc --version"
+TOOL_BIN="jbig2"
+TOOL_TEST="jbig2 --help"
 
 fail() {
 	echo -e "asdf-$TOOL_NAME: $*"
@@ -14,7 +14,6 @@ fail() {
 
 curl_opts=(-fsSL)
 
-# NOTE: You might want to remove this if jbig2enc is not hosted on GitHub releases.
 if [ -n "${GITHUB_API_TOKEN:-}" ]; then
 	curl_opts=("${curl_opts[@]}" -H "Authorization: token $GITHUB_API_TOKEN")
 fi
@@ -26,13 +25,10 @@ sort_versions() {
 
 list_github_tags() {
 	git ls-remote --tags --refs "$GH_REPO" |
-		grep -o 'refs/tags/.*' | cut -d/ -f3- |
-		sed 's/^v//' # NOTE: You might want to adapt this sed to remove non-version strings from tags
+		grep -o 'refs/tags/.*' | cut -d/ -f3-
 }
 
 list_all_versions() {
-	# TODO: Adapt this. By default we simply list the tag names from GitHub releases.
-	# Change this function if jbig2enc has other means of determining installable versions.
 	list_github_tags
 }
 
@@ -41,8 +37,7 @@ download_release() {
 	version="$1"
 	filename="$2"
 
-	# TODO: Adapt the release URL convention for jbig2enc
-	url="$GH_REPO/archive/v${version}.tar.gz"
+	url="$GH_REPO/archive/${version}.tar.gz"
 
 	echo "* Downloading $TOOL_NAME release $version..."
 	curl "${curl_opts[@]}" -o "$filename" -C - "$url" || fail "Could not download $url"
@@ -51,20 +46,29 @@ download_release() {
 install_version() {
 	local install_type="$1"
 	local version="$2"
-	local install_path="${3%/bin}/bin"
+	local install_path="$3"
 
 	if [ "$install_type" != "version" ]; then
 		fail "asdf-$TOOL_NAME supports release installs only"
 	fi
 
 	(
-		mkdir -p "$install_path"
-		cp -r "$ASDF_DOWNLOAD_PATH"/* "$install_path"
+		cd "$ASDF_DOWNLOAD_PATH"
 
-		# TODO: Assert jbig2enc executable exists.
-		local tool_cmd
-		tool_cmd="$(echo "$TOOL_TEST" | cut -d' ' -f1)"
-		test -x "$install_path/$tool_cmd" || fail "Expected $install_path/$tool_cmd to be executable."
+		echo "* Running autogen.sh..."
+		./autogen.sh || fail "autogen.sh failed"
+
+		echo "* Configuring..."
+		./configure --prefix="$install_path" || fail "configure failed"
+
+		echo "* Building..."
+		make || fail "make failed"
+
+		echo "* Installing..."
+		make install || fail "make install failed"
+
+		local bin_path="$install_path/bin"
+		test -x "$bin_path/$TOOL_BIN" || fail "Expected $bin_path/$TOOL_BIN to be executable."
 
 		echo "$TOOL_NAME $version installation was successful!"
 	) || (

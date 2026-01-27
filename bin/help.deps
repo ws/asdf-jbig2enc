@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+# Output dependencies for jbig2enc, one per line
+# This script is called by: asdf jbig2enc help deps
+
+case "$(uname -s)" in
+Darwin)
+	cat <<EOF
+autoconf (brew install autoconf)
+automake (brew install automake)
+libtool (brew install libtool)
+leptonica (brew install leptonica)
+EOF
+	;;
+Linux)
+	cat <<EOF
+autoconf
+automake
+libtool
+build-essential
+libleptonica-dev
+EOF
+	;;
+*)
+	cat <<EOF
+autoconf
+automake
+libtool
+C/C++ compiler (gcc, g++)
+leptonica development libraries
+EOF
+	;;
+esac

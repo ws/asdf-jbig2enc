@@ -15,10 +15,21 @@
 
 # Dependencies
 
-**TODO: adapt this section**
+This plugin builds jbig2enc from source, so you need build tools and libraries installed.
 
-- `bash`, `curl`, `tar`, and [POSIX utilities](https://pubs.opengroup.org/onlinepubs/9699919799/idx/utilities.html).
-- `SOME_ENV_VAR`: set this environment variable in your shell config to load the correct version of tool x.
+**macOS (Homebrew):**
+
+```shell
+brew install autoconf automake libtool leptonica
+```
+
+**Debian/Ubuntu:**
+
+```shell
+sudo apt install autoconf automake libtool build-essential libleptonica-dev
+```
+
+You can also run `asdf jbig2enc help deps` to see the required dependencies for your OS.
 
 # Install
 
@@ -42,8 +53,8 @@ asdf install jbig2enc latest
 # Set a version globally (on your ~/.tool-versions file)
 asdf global jbig2enc latest
 
-# Now jbig2enc commands are available
-jbig2enc --version
+# Now jbig2 commands are available
+jbig2 --help
 ```
 
 Check [asdf](https://github.com/asdf-vm/asdf) readme for more instructions on how to
