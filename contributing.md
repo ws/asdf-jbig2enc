@@ -13,19 +13,19 @@ Contributions of any kind are welcome!
 Test the plugin by running:
 
 ```shell
-asdf plugin test jbig2enc https://github.com/ws/asdf-jbig2enc.git "jbig2enc --version"
+asdf plugin test jbig2enc https://github.com/ws/asdf-jbig2enc.git "jbig2 --help"
 ```
 
 To test a specific version:
 
 ```shell
-asdf plugin test jbig2enc https://github.com/ws/asdf-jbig2enc.git --asdf-tool-version 0.29 "jbig2enc --version"
+asdf plugin test jbig2enc https://github.com/ws/asdf-jbig2enc.git --asdf-tool-version 0.29 "jbig2 --help"
 ```
 
 To test from a local branch:
 
 ```shell
-asdf plugin test jbig2enc . --asdf-plugin-gitref HEAD "jbig2enc --version"
+asdf plugin test jbig2enc . --asdf-plugin-gitref HEAD "jbig2 --help"
 ```
 
 ## Linting & Formatting

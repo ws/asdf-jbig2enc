@@ -43,6 +43,19 @@ download_release() {
 	curl "${curl_opts[@]}" -o "$filename" -C - "$url" || fail "Could not download $url"
 }
 
+setup_homebrew_paths() {
+	if command -v brew &>/dev/null; then
+		local brew_prefix
+		brew_prefix="$(brew --prefix)"
+
+		export LDFLAGS="-L${brew_prefix}/lib ${LDFLAGS:-}"
+		export CPPFLAGS="-I${brew_prefix}/include ${CPPFLAGS:-}"
+		export PKG_CONFIG_PATH="${brew_prefix}/lib/pkgconfig:${PKG_CONFIG_PATH:-}"
+
+		echo "* Detected Homebrew at ${brew_prefix}"
+	fi
+}
+
 install_version() {
 	local install_type="$1"
 	local version="$2"
@@ -54,6 +67,8 @@ install_version() {
 
 	(
 		cd "$ASDF_DOWNLOAD_PATH"
+
+		setup_homebrew_paths
 
 		echo "* Running autogen.sh..."
 		./autogen.sh || fail "autogen.sh failed"
