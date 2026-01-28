@@ -1,71 +1,38 @@
-<div align="center">
+I needed [jbig2enc](https://github.com/agl/jbig2enc) for [ocrmypdf](https://github.com/ocrmypdf/OCRmyPDF) ([details](https://ocrmypdf.readthedocs.io/en/latest/jbig2.html)) and decided installing via Homebrew was simply not difficult enough; I wanted to make it a [mise](https://mise.jdx.dev/) package. Since there are no binaries provided by the authors (I think Homebrew is installing from maintainer-managed builds), I followed the [mise docs](https://mise.jdx.dev/dev-tools/backend_architecture.html#use-asdf-plugins-when) directions and created an asdf plugin. This is that plugin!
 
-# asdf-jbig2enc [![Build](https://github.com/ws/asdf-jbig2enc/actions/workflows/build.yml/badge.svg)](https://github.com/ws/asdf-jbig2enc/actions/workflows/build.yml) [![Lint](https://github.com/ws/asdf-jbig2enc/actions/workflows/lint.yml/badge.svg)](https://github.com/ws/asdf-jbig2enc/actions/workflows/lint.yml)
-
-[jbig2enc](https://github.com/agl/jbig2enc) plugin for the [asdf version manager](https://asdf-vm.com).
-
-</div>
-
-# Contents
-
-- [Dependencies](#dependencies)
-- [Install](#install)
-- [Contributing](#contributing)
-- [License](#license)
+It was 100% vibe coded, I don't know what I'm doing, you shouldn't use it, etc. etc. I can confirm it works on my specific machine on my specific version of MacOS and absolutely nothing else.
 
 # Dependencies
 
-This plugin builds jbig2enc from source, so you need build tools and libraries installed.
+This plugin builds jbig2enc from source, so you need build tools and libraries installed. Yes we were trying to avoid Brew in the first place, don't ask questions.
 
-**macOS (Homebrew):**
+**macOS:**
 
 ```shell
 brew install autoconf automake libtool leptonica
 ```
 
-**Debian/Ubuntu:**
+# How To Use With Mise
 
 ```shell
-sudo apt install autoconf automake libtool build-essential libleptonica-dev
+# Add the plugin
+mise plugins install jbig2enc https://github.com/ws/asdf-jbig2enc.git
+
+# Install latest
+mise install jbig2enc
+
+# Install a specific version
+mise install jbig2enc@0.29
+
+# Set as global default
+mise use -g jbig2enc@0.29
+
+# Or set for current directory only
+mise use jbig2enc@0.29
 ```
 
-You can also run `asdf jbig2enc help deps` to see the required dependencies for your OS.
-
-# Install
-
-Plugin:
+# How To Use With ocrmypdf
 
 ```shell
-asdf plugin add jbig2enc
-# or
-asdf plugin add jbig2enc https://github.com/ws/asdf-jbig2enc.git
+mise x uv jbig2enc cargo:pngquant -- uvx ocrmypdf yourfile.pdf output.pdf
 ```
-
-jbig2enc:
-
-```shell
-# Show all installable versions
-asdf list-all jbig2enc
-
-# Install specific version
-asdf install jbig2enc latest
-
-# Set a version globally (on your ~/.tool-versions file)
-asdf global jbig2enc latest
-
-# Now jbig2 commands are available
-jbig2 --help
-```
-
-Check [asdf](https://github.com/asdf-vm/asdf) readme for more instructions on how to
-install & manage versions.
-
-# Contributing
-
-Contributions of any kind welcome! See the [contributing guide](contributing.md).
-
-[Thanks goes to these contributors](https://github.com/ws/asdf-jbig2enc/graphs/contributors)!
-
-# License
-
-See [LICENSE](LICENSE) © [Will Smidlein](https://github.com/ws/)
